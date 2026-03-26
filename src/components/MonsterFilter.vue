@@ -1,7 +1,7 @@
 <template>
   <select
     v-model="model"
-    class="p-3 bg-[#1a120d] border border-amber-700 rounded text-amber-200"
+    class="mb-6 p-2 bg-[#1a120d] border border-amber-700 text-amber-200"
   >
     <option value="">Todos</option>
     <option v-for="type in types" :key="type" :value="type">
@@ -11,12 +11,9 @@
 </template>
 
 <script setup>
-const model = defineModel()
-
 defineProps({
-  types: {
-    type: Array,
-    default: () => []
-  }
+  types: Array
 })
+
+const model = defineModel()
 </script>

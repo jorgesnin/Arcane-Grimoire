@@ -1,11 +1,40 @@
 <template>
-  <div class="bg-[#2a1e18] p-6 rounded-xl border border-amber-700 animate-pulse">
+  <div
+    class="bg-gradient-to-br from-[#1f1510] to-[#140e0b]
+           border border-amber-900/40
+           p-4 rounded-xl
+           shadow-md shadow-black/60"
+  >
 
-    <div class="h-6 bg-amber-900 rounded w-2/3 mb-4"></div>
+    <!-- shimmer -->
+    <div class="animate-pulse space-y-3">
 
-    <div class="h-4 bg-amber-900 rounded w-1/2 mb-2"></div>
+      <!-- imagen -->
+      <div class="w-full h-40 rounded-lg bg-[#2a1e18]"></div>
 
-    <div class="h-4 bg-amber-900 rounded w-3/4"></div>
+      <!-- título -->
+      <div class="h-4 w-2/3 rounded bg-[#3a2a20]"></div>
+
+      <!-- badge -->
+      <div class="h-3 w-1/3 rounded bg-[#2a1e18]"></div>
+
+      <!-- stats -->
+      <div class="flex gap-3 mt-2">
+        <div class="h-4 w-10 rounded bg-[#3a2a20]"></div>
+        <div class="h-4 w-10 rounded bg-[#2a1e18]"></div>
+        <div class="h-4 w-10 rounded bg-[#3a2a20]"></div>
+      </div>
+
+      <!-- botones -->
+      <div class="flex gap-3 mt-3">
+        <div class="h-7 w-16 rounded bg-[#3a2a20]"></div>
+        <div class="h-7 w-20 rounded bg-[#2a1e18]"></div>
+      </div>
+
+    </div>
 
   </div>
 </template>
+
+<script setup>
+</script>

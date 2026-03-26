@@ -1,11 +1,12 @@
 <template>
   <div class="text-center text-amber-200 mt-20">
+
     <h1 class="text-6xl text-amber-400 font-bold mb-6">
       404
     </h1>
 
     <p class="text-xl mb-6">
-      Esta Pagina no existe en el grimorio...
+      Te has perdido en el abismo...
     </p>
 
     <RouterLink
@@ -14,5 +15,9 @@
     >
       Volver al inicio
     </RouterLink>
+
   </div>
 </template>
+
+<script setup>
+</script>

@@ -5,58 +5,69 @@
       Bestiario
     </h1>
 
-    <!-- buscador -->
-    <input
-      v-model="bestiary.searchQuery"
-      @input="handleSearch"
-      type="text"
-      placeholder="Buscar monstruo..."
-      class="w-full mb-4 p-2 bg-[#1a120d] border border-amber-700 text-amber-200"
+    <MonsterSearch v-model="bestiary.searchQuery" />
+
+    <MonsterFilter
+      v-model="bestiary.selectedType"
+      :types="types"
     />
 
-    <!-- filtro -->
-    <select
-      v-model="bestiary.selectedType"
-      @change="handleSearch"
-      class="mb-6 p-2 bg-[#1a120d] border border-amber-700 text-amber-200"
-    >
-      <option value="">Todos</option>
-      <option v-for="type in types" :key="type" :value="type">
-        {{ type }}
-      </option>
-    </select>
+    <!-- skeleton -->
+    <div v-if="bestiary.isLoading" class="grid grid-cols-3 gap-6">
+      <MonsterSkeleton v-for="n in 6" :key="n" />
+    </div>
 
     <!-- lista -->
-    <div class="grid grid-cols-3 gap-6">
-
+    <div
+      v-else-if="bestiary.filteredMonsters.length > 0"
+      class="grid grid-cols-3 gap-6"
+    >
       <MonsterCard
         v-for="monster in bestiary.filteredMonsters"
         :key="monster.slug"
         :monster="monster"
         @open-modal="openModal"
       />
-
     </div>
 
-    <!-- paginacion-->
-    <div class="flex justify-center gap-4 mt-8">
+    <!-- empty -->
+    <p
+      v-else
+      class="text-amber-400 text-center mt-10"
+    >
+      El conjuro de búsqueda falló: No hay monstruos que coincidan
+    </p>
 
+    <!-- PAGINACIÓN CON FLECHAS -->
+    <div class="flex justify-center items-center gap-6 mt-8">
+
+      <!-- PREV -->
       <button
         @click="bestiary.prevPage"
-        class="px-4 py-2 border border-amber-700 text-amber-300"
+        :disabled="!bestiary.previous"
+        class="px-3 py-2 border border-amber-700 text-amber-300
+               hover:bg-amber-700 hover:text-white
+               disabled:opacity-30 disabled:hover:bg-transparent
+               rounded transition"
       >
-        Anterior
+        ←
       </button>
 
-      <span class="text-amber-300">
+      <!-- PAGE -->
+      <span class="text-amber-300 font-semibold">
         Página {{ bestiary.page }}
       </span>
 
+      <!-- NEXT -->
       <button
         @click="bestiary.nextPage"
-        class="px-4 py-2 border border-amber-700 text-amber-300"
+        :disabled="!bestiary.next"
+        class="px-3 py-2 border border-amber-700 text-amber-300
+               hover:bg-amber-700 hover:text-white
+               disabled:opacity-30 disabled:hover:bg-transparent
+               rounded transition"
       >
-        Siguiente
+        →
       </button>
 
     </div>
@@ -77,6 +88,9 @@ import { useBestiaryStore } from "../stores/bestiaryStore"
 
 import MonsterCard from "../components/MonsterCard.vue"
 import MonsterModal from "../components/MonsterModal.vue"
+import MonsterSearch from "../components/MonsterSearch.vue"
+import MonsterFilter from "../components/MonsterFilter.vue"
+import MonsterSkeleton from "../components/MonsterSkeleton.vue"
 
 const bestiary = useBestiaryStore()
 
@@ -86,18 +100,21 @@ function openModal(monster) {
   selectedMonster.value = monster
 }
 
-function handleSearch() {
-  bestiary.page = 1
-  bestiary.fetchMonsters()
-}
-
 onMounted(() => {
-
   bestiary.reset()
 })
 
 const types = computed(() => {
-  const all = bestiary.monsters.map(m => m.type).filter(Boolean)
-  return [...new Set(all)]
+  const apiTypes = bestiary.monsters
+    .map(m => m.type)
+    .filter(Boolean)
+
+  const unique = [...new Set(apiTypes)]
+
+  if (!unique.includes("Dragon")) {
+    unique.push("Dragon")
+  }
+
+  return unique
 })
 </script>

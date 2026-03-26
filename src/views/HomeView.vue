@@ -1,55 +1,43 @@
 <template>
   <div>
 
-    <h1 class="text-3xl text-amber-400 font-bold mb-6">
+    <h1 class="text-3xl text-amber-400 font-bold mb-2">
       Panel de Campaña
     </h1>
 
-    <div v-if="isLoading" class="text-amber-400">
-      Cargando datos...
-    </div>
+    <p class="text-amber-300 mb-6">
+      Campaña: {{ campaign.name }} | Nivel del grupo: {{ campaign.partyLevel }}
+    </p>
 
-    <div v-else class="grid grid-cols-2 gap-6">
+    <div class="grid grid-cols-2 gap-6">
 
-      <!-- monstruos -->
-      <div class="bg-[#1a120d] border border-amber-700 p-6 rounded-xl">
+      <!-- MONSTRUOS -->
+      <div class="border border-amber-800 p-6 rounded-xl">
         <p class="text-amber-300">Monstruos Totales</p>
-        <h2 class="text-3xl text-amber-400">
-          {{ bestiary.monsters.length }}
-        </h2>
-      </div>
 
-      <!-- hechizos -->
-      <div class="bg-[#1a120d] border border-amber-700 p-6 rounded-xl">
-        <p class="text-amber-300">Hechizos Nivel Alto</p>
-        <h2 class="text-3xl text-amber-400">
-          {{ spell.highLevelSpellsCount }}
-        </h2>
-      </div>
+        <p v-if="isLoading" class="text-2xl mt-2">...</p>
 
-      <!-- dia -->
-      <div class="bg-[#1a120d] border border-amber-700 p-6 rounded-xl">
-        <p class="text-amber-300 mb-2">Día de Campaña</p>
-        <h2 class="text-3xl text-amber-400">
-          {{ day }}
-        </h2>
-      </div>
-
-      <!-- combate-->
-      <div class="bg-[#1a120d] border border-amber-700 p-6 rounded-xl">
-        <p class="text-amber-300 mb-2">Registro de Combate</p>
-
-        <button
-          @click="rollDice"
-          class="bg-amber-500 text-black px-4 py-2 rounded"
-        >
-          Tirar d20
-        </button>
-
-        <p class="mt-4 text-amber-200">
-          Resultado: {{ result }}
+        <p v-else class="text-4xl text-amber-400 mt-2">
+          {{ monstersCount }}
         </p>
       </div>
+
+      <!-- HECHIZOS -->
+      <div class="border border-amber-800 p-6 rounded-xl">
+        <p class="text-amber-300">Hechizos Totales</p>
+
+        <p v-if="isLoading" class="text-2xl mt-2">...</p>
+
+        <p v-else class="text-4xl text-amber-400 mt-2">
+          {{ spellsCount }}
+        </p>
+      </div>
+
+      <!-- CLOCK -->
+      <CampaignClock />
+
+      <!-- LOG -->
+      <CombatLog />
 
     </div>
 
@@ -57,27 +45,32 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
-import { useBestiaryStore } from "../stores/bestiaryStore"
-import { useSpellStore } from "../stores/spellStore"
+import { ref, onMounted, inject } from "vue"
+import { getMonsters, getSpells } from "../services/monsterService"
 
-const bestiary = useBestiaryStore()
-const spell = useSpellStore()
+import CampaignClock from "../components/CampaignClock.vue"
+import CombatLog from "../components/CombatLog.vue"
 
-const isLoading = ref(true)
-const day = ref(1)
-const result = ref(null)
+// inject
+const campaign = inject("campaignContext")
 
-function rollDice() {
-  result.value = Math.floor(Math.random() * 20) + 1
-}
+const monstersCount = ref(0)
+const spellsCount = ref(0)
+
+const isLoading = ref(false)
 
 onMounted(async () => {
   try {
-    await Promise.all([
-      bestiary.fetchMonsters(),
-      spell.fetchSpells()
+    isLoading.value = true
+
+    const [monsters, spells] = await Promise.all([
+      getMonsters(),
+      getSpells()
     ])
+
+    monstersCount.value = monsters.count
+    spellsCount.value = spells.count
+
   } catch (error) {
     console.error(error)
   } finally {

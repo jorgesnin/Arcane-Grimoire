@@ -43,10 +43,10 @@ const routes = [
     ]
   },
   {
-    path: "/:pathMatch(.*)*",
-    name: "notfound",
-    component: () => import("../views/NotFoundView.vue")
-  }
+  path: "/:pathMatch(.*)*",
+  name: "notfound",
+  component: () => import("../views/LostInTheDungeon.vue")
+}
 ]
 
 const router = createRouter({

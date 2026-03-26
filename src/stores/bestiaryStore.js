@@ -18,7 +18,10 @@ export const useBestiaryStore = defineStore("bestiary", {
     preparedMonsters: []
   }),
 
-  persist: true,
+  // Persistimos solo lo necesario
+  persist: {
+    paths: ["preparedMonsters"]
+  },
 
   actions: {
     async fetchMonsters() {

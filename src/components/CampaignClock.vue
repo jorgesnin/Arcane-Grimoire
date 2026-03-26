@@ -1,12 +1,12 @@
 <template>
-  <div class="bg-[#1a120d] border border-amber-700 rounded-xl p-6">
-    <h2 class="text-amber-400 mb-2">
-      Día de Campaña
-    </h2>
+  <div class="border border-amber-800 p-6 rounded-xl">
 
-    <p class="text-3xl font-bold text-amber-200">
+    <p class="text-amber-300">Día de Campaña</p>
+
+    <p class="text-4xl text-amber-400 mt-2">
       {{ day }}
     </p>
+
   </div>
 </template>
 
@@ -14,6 +14,7 @@
 import { ref, onMounted, onUnmounted } from "vue"
 
 const day = ref(1)
+
 let interval = null
 
 onMounted(() => {

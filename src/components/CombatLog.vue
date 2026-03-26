@@ -1,23 +1,21 @@
 <template>
-  <div class="bg-[#1a120d] border border-amber-700 rounded-xl p-6">
+  <div class="border border-amber-800 p-6 rounded-xl">
 
-    <h2 class="text-amber-400 mb-4">
-      Registro de Combate
-    </h2>
+    <p class="text-amber-300 mb-3">Registro de Combate</p>
 
     <button
       @click="rollDice"
-      class="mb-4 px-4 py-2 bg-amber-600 hover:bg-amber-500 text-black font-bold rounded"
+      class="px-4 py-2 bg-amber-600 rounded mb-4"
     >
       Tirar d20
     </button>
 
     <div
       ref="logContainer"
-      class="h-40 overflow-y-auto border border-amber-700 p-3 text-sm"
+      class="text-amber-200 space-y-1 max-h-32 overflow-y-auto"
     >
-      <p v-for="(log, index) in logs" :key="index">
-        {{ log }}
+      <p v-for="(roll, index) in rolls" :key="index">
+        {{ roll }}
       </p>
     </div>
 
@@ -27,16 +25,19 @@
 <script setup>
 import { ref, watch, nextTick } from "vue"
 
-const logs = ref([])
+const rolls = ref([])
 const logContainer = ref(null)
 
 function rollDice() {
-  const roll = Math.floor(Math.random() * 20) + 1
-  logs.value.push(`Tirada de ataque: ${roll}`)
+  const result = Math.floor(Math.random() * 20) + 1
+  rolls.value.push(`Tirada de ataque: ${result}`)
 }
 
-watch(logs, async () => {
+watch(rolls, async () => {
   await nextTick()
-  logContainer.value.scrollTop = logContainer.value.scrollHeight
+
+  if (logContainer.value) {
+    logContainer.value.scrollTop = logContainer.value.scrollHeight
+  }
 })
 </script>

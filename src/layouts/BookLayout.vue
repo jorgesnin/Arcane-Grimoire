@@ -11,15 +11,12 @@
              flex flex-col items-center py-6 gap-8 relative"
     >
 
-      <!-- linea -->
       <div class="absolute left-0 top-0 h-full w-1 bg-amber-800/40"></div>
 
-      <!-- titulo -->
       <div class="text-2xl font-bold text-amber-500 tracking-widest">
         AG
       </div>
 
-      <!-- links -->
       <router-link
         to="/welcome"
         class="hover:text-amber-400 hover:scale-105 transition-all duration-200"
@@ -52,4 +49,12 @@
 </template>
 
 <script setup>
+import { provide } from "vue"
+
+const campaignContext = {
+  name: "Crónicas del Grimoire",
+  partyLevel: 5
+}
+
+provide("campaignContext", campaignContext)
 </script>

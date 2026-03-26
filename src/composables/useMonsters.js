@@ -1,4 +1,4 @@
-import { ref, watch, computed } from "vue"
+import { ref, watch, computed, onUnmounted } from "vue"
 import { getMonsters } from "../services/monsterService"
 
 export default function useMonsters() {
@@ -61,14 +61,25 @@ export default function useMonsters() {
 
   watch(selectedType, () => {
     page.value = 1
+    fetchMonsters()
   })
 
   const filteredMonsters = computed(() => {
-    if (!selectedType.value) return monsters.value
+    return monsters.value.filter(m => {
+      const matchesType = selectedType.value
+        ? m.type?.toLowerCase().includes(selectedType.value.toLowerCase())
+        : true
 
-    return monsters.value.filter(m =>
-      m.type?.toLowerCase().includes(selectedType.value.toLowerCase())
-    )
+      const matchesSearch = searchQuery.value
+        ? m.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
+        : true
+
+      return matchesType && matchesSearch
+    })
+  })
+
+  onUnmounted(() => {
+    clearTimeout(timeout)
   })
 
   return {
