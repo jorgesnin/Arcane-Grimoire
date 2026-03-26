@@ -38,10 +38,9 @@
       El conjuro de búsqueda falló: No hay monstruos que coincidan
     </p>
 
-    <!-- PAGINACIÓN CON FLECHAS -->
+    <!-- PAGINACIÓN -->
     <div class="flex justify-center items-center gap-6 mt-8">
 
-      <!-- PREV -->
       <button
         @click="bestiary.prevPage"
         :disabled="!bestiary.previous"
@@ -53,12 +52,10 @@
         ←
       </button>
 
-      <!-- PAGE -->
       <span class="text-amber-300 font-semibold">
         Página {{ bestiary.page }}
       </span>
 
-      <!-- NEXT -->
       <button
         @click="bestiary.nextPage"
         :disabled="!bestiary.next"
@@ -83,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted, computed, watch } from "vue"
 import { useBestiaryStore } from "../stores/bestiaryStore"
 
 import MonsterCard from "../components/MonsterCard.vue"
@@ -104,6 +101,16 @@ onMounted(() => {
   bestiary.reset()
 })
 
+/* 🔥 FIX BUSCADOR */
+watch(
+  () => bestiary.searchQuery,
+  () => {
+    bestiary.page = 1
+    bestiary.fetchMonsters()
+  }
+)
+
+/* tipos dinámicos + dragon */
 const types = computed(() => {
   const apiTypes = bestiary.monsters
     .map(m => m.type)
