@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+body {
+  @apply bg-[#120d0a] text-amber-100 antialiased;
+}
+
+::selection {
+  background: #f59e0b;
+  color: black;
+}
